@@ -1,16 +1,42 @@
-name: workflow
+name: Java gradle CI
 on: push
 jobs:
-  Build:
+  Clone:
     runs-on: ubuntu-latest
-    container: gradle:6-jdk11
     steps:
       - name: clone
         uses: actions/checkout@v3
+      - name: share source
+        uses: actions/upload-artifact@v3
+        with:
+          name: source
+          path: .
+  Build:
+    needs: Clone
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    steps:
+      - name: download source
+        uses: actions/download-artifact@v3
+        with:
+          name: source
+          path: .
       - name: build
         run: ./ci/build-app.sh
       - name: upload arifact
-        uses: actions/upload-artifact@v3
+        uses: actions/down-artifact@v3
         with:
-          name: compiled-code
+          name: source
           path: .
+  Test:
+    needs: Build
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    steps:
+      - name: download source
+        uses: actions/download-artifact@v3
+        with:
+          name: source
+          path: .
+      - name: test
+        run: ./ci/unit-test-app.sh
