@@ -5,26 +5,12 @@ env:
   docker_password: ${{ secrets.GITHUB_TOKEN }}
   GIT_COMMIT: ${{ github.sha }}
 jobs:
-  Clone:
-    runs-on: ubuntu-latest
-    steps:
-      - name: clone
-        uses: actions/checkout@v3
-      - name: share source
-        uses: actions/upload-artifact@v3
-        with:
-          name: source
-          path: .
   Build:
-    needs: [Clone]
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
-      - name: download source
-        uses: actions/download-artifact@v3
-        with:
-          name: source
-          path: .
+      - name: clone
+        uses: actions/checkout@v3
       - name: build
         run: chmod -R +x ci && ./ci/build-app.sh
       - name: upload arifact
