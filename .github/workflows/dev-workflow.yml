@@ -1,0 +1,35 @@
+name: Java gradle CI
+on: 
+  push:
+    branches-ignore:
+      - main
+env:
+  docker_username: ${{ github.actor }}
+  docker_password: ${{ secrets.GITHUB_TOKEN }}
+  GIT_COMMIT: ${{ github.sha }}
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    steps:
+      - name: clone
+        uses: actions/checkout@v3
+      - name: build
+        run: chmod -R +x ci && ./ci/build-app.sh
+      - name: upload arifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: source
+          path: .
+  Test:
+    needs: [Build]
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    steps:
+      - name: download source
+        uses: actions/download-artifact@v3
+        with:
+          name: source
+          path: .
+      - name: test
+        run: chmod -R +x ci && ./ci/unit-test-app.sh
