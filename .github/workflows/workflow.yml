@@ -24,7 +24,7 @@ jobs:
       - name: build
         run: ./ci/build-app.sh
       - name: upload arifact
-        uses: actions/down-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
           name: source
           path: .
