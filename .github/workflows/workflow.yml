@@ -3,7 +3,7 @@ on: push
 jobs:
   hello-world:
     runs-on: ubuntu-latest
-    container: gradle:6-jdk17
+    container: gradle:6-jdk11
     steps:
       - name: clone
         uses: actions/checkout@v3
