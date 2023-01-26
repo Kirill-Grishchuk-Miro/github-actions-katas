@@ -22,7 +22,7 @@ jobs:
           name: source
           path: .
       - name: build
-        run: chmod +x ci/build-app.sh && ./ci/build-app.sh
+        run: chmod -R +x ci && ./ci/build-app.sh
       - name: upload arifact
         uses: actions/upload-artifact@v3
         with:
@@ -39,4 +39,4 @@ jobs:
           name: source
           path: .
       - name: test
-        run: ./ci/unit-test-app.sh
+        run: chmod -R +x ci && ./ci/unit-test-app.sh
